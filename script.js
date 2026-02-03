@@ -69,17 +69,23 @@ window.abrirModal = (tipo) => {
 };
 
 const actualizarSelectGastos = () => {
-    onSnapshot(categoriasRef, (snapshot) => {
-        const select = document.getElementById('form-categoria');
-        if(select && tipoActual === 'gasto') {
-            select.innerHTML = "";
-            snapshot.forEach(d => {
-                const cat = d.data();
-                if(cat.tipo === 'gasto') select.add(new Option(cat.nombre, cat.nombre));
-            });
-        }
-    });
-};
+    // Esto mostrará tus categorías en Ajustes para poder borrarlas
+onSnapshot(categoriasRef, (snapshot) => {
+    const listaAjustes = document.getElementById('lista-ajustes-categorias');
+    if(listaAjustes) {
+        listaAjustes.innerHTML = "";
+        snapshot.forEach(d => {
+            const cat = d.data();
+            listaAjustes.innerHTML += `
+                <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl mb-2">
+                    <span class="font-bold text-gray-700 text-sm">${cat.nombre} (${cat.tipo})</span>
+                    <button onclick="window.eliminarDato('categorias', '${d.id}')" class="text-red-400 p-2">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>`;
+        });
+    }
+});
 
 window.cerrarModal = () => {
     const modal = document.getElementById('modal-registro');
@@ -151,16 +157,27 @@ onSnapshot(transaccionesRef, (snapshot) => {
                             <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Categoría</p>
                             <span class="text-sm font-bold text-gray-700 uppercase">${cat}</span>
                         </div>
-                        <div class="text-right">
-                            <span class="text-lg font-black text-red-500">${formatoLempira(total)}</span>
-                        </div>
-                    </div>
+                        <div class="text-right flex items-center gap-3">
+    <span class="text-lg font-black text-red-500">${formatoLempira(total)}</span>
+    <button onclick="window.eliminarDato('transacciones', '${doc.id}')" class="text-gray-300 hover:text-red-500 transition-colors">
+        <i class="fa-solid fa-trash-can text-xs"></i>
+    </button>
+</div>
                     <div class="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
                         <div class="bg-red-500 h-full rounded-full transition-all duration-1000" 
                              style="width: ${porcentaje}%"></div>
                     </div>
                     <p class="text-[9px] text-gray-400 mt-1 font-bold">${porcentaje.toFixed(1)}% del total de gastos</p>
                 </div>`;
-        });
+   // FUNCIÓN PARA ELIMINAR CUALQUIER DOCUMENTO
+window.eliminarDato = async function(coleccion, id) {
+    if (confirm("¿Estás seguro de que quieres eliminar esto?")) {
+        try {
+            await deleteDoc(doc(db, coleccion, id));
+            console.log("Eliminado de " + coleccion);
+        } catch (error) {
+            console.error("Error al eliminar:", error);
+            alert("No tienes permisos para eliminar. Revisa las reglas de Firebase.");
+        }
     }
-});
+};

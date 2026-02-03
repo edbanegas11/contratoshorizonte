@@ -55,9 +55,19 @@
   </section>
 
  <section id="tab-reportes" class="p-4 hidden space-y-4">
-    <h3 class="text-xl font-black px-2 mb-4 uppercase text-xs tracking-widest text-gray-400">Gastos por Categoría</h3>
-    <div id="lista-categorias-gastos" class="space-y-3">
-      </div>
+    <div class="flex bg-gray-200 p-1 rounded-2xl mb-4">
+        <button onclick="window.cambiarSubTab('historial')" id="btn-sub-historial" class="flex-1 py-2 rounded-xl font-black text-[10px] uppercase bg-white shadow-sm text-blue-900 transition-all">Historial</button>
+        <button onclick="window.cambiarSubTab('analisis')" id="btn-sub-analisis" class="flex-1 py-2 rounded-xl font-black text-[10px] uppercase text-gray-500 transition-all">Análisis de Gastos</button>
+    </div>
+
+    <div id="sub-tab-historial" class="space-y-3">
+        <div id="lista-movimientos-historial" class="space-y-3"></div>
+    </div>
+
+    <div id="sub-tab-analisis" class="hidden space-y-6">
+        <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Distribución de Gastos</h3>
+        <div id="lista-categorias-gastos" class="space-y-4"></div>
+    </div>
 </section>
 
   <section id="tab-ajustes" class="p-4 hidden space-y-6">

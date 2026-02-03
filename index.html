@@ -1,0 +1,101 @@
+<div id="app" class="bg-gray-50 min-h-screen pb-24 text-gray-800">
+  
+  <header class="bg-blue-900 text-white p-6 rounded-b-[2.5rem] shadow-lg">
+    <h1 class="text-2xl font-black leading-tight">STL HORIZONTE</h1>
+    <p class="opacity-80 text-xs font-bold tracking-widest uppercase">Contratos Mensuales</p>
+</header>
+
+  <section id="tab-dashboard" class="p-4 space-y-6">
+    <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100">
+      <p class="text-gray-400 text-xs uppercase font-black tracking-widest mb-1">Balance General</p>
+      <h2 id="total-balance" class="text-4xl font-black text-blue-900 leading-none">$0.00</h2>
+      <div class="flex mt-6 gap-3">
+        <div class="flex-1 bg-green-50 p-4 rounded-2xl text-green-700 text-center">
+          <p class="text-[10px] font-bold uppercase">Ingresos</p>
+          <span id="dash-ingresos" class="font-black text-lg">+$0</span>
+        </div>
+        <div class="flex-1 bg-red-50 p-4 rounded-2xl text-red-700 text-center">
+          <p class="text-[10px] font-bold uppercase">Gastos</p>
+          <span id="dash-gastos" class="font-black text-lg">-$0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <button onclick="window.abrirModal('ingreso')" class="bg-white border-2 border-green-500 p-6 rounded-[2rem] flex flex-col items-center gap-2 active:scale-95 transition-transform">
+        <i class="fa-solid fa-circle-plus text-green-500 text-3xl"></i>
+        <span class="font-black text-xs uppercase">Nuevo Ingreso</span>
+      </button>
+      <button onclick="window.abrirModal('gasto')" class="bg-white border-2 border-red-500 p-6 rounded-[2rem] flex flex-col items-center gap-2 active:scale-95 transition-transform">
+        <i class="fa-solid fa-circle-minus text-red-500 text-3xl"></i>
+        <span class="font-black text-xs uppercase">Nuevo Gasto</span>
+      </button>
+    </div>
+  </section>
+
+ <section id="tab-reportes" class="p-4 hidden space-y-4">
+    <h3 class="text-xl font-black px-2 mb-4 uppercase text-xs tracking-widest text-gray-400">Gastos por Categoría</h3>
+    <div id="lista-categorias-gastos" class="space-y-3">
+      </div>
+</section>
+
+  <section id="tab-ajustes" class="p-4 hidden space-y-6">
+    <h3 class="text-xl font-black px-2">Configuración</h3>
+    <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100">
+      <p class="text-xs font-black text-gray-400 uppercase mb-4 tracking-widest">Añadir Nueva Categoría</p>
+      <input type="text" id="nueva-cat-nombre" placeholder="EJ: COMBUSTIBLE" class="w-full bg-gray-50 border-none rounded-2xl p-4 font-bold mb-3 focus:ring-2 focus:ring-blue-500">
+      <select id="nueva-cat-tipo" class="w-full bg-gray-50 border-none rounded-2xl p-4 font-bold mb-4 text-gray-500 appearance-none">
+        <option value="gasto">Tipo: GASTO</option>
+        <option value="ingreso">Tipo: INGRESO</option>
+      </select>
+      <button onclick="window.crearCategoria()" class="w-full bg-gray-900 text-white font-black py-4 rounded-2xl active:scale-95 transition-all">
+        GUARDAR CATEGORÍA
+      </button>
+    </div>
+    
+    <div class="px-2">
+      <p class="text-xs font-black text-gray-400 uppercase mb-4 tracking-widest">Mis Categorías</p>
+      <div id="lista-ajustes-categorias" class="space-y-2">
+        </div>
+    </div>
+  </section>
+
+  <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t border-gray-100 px-8 py-4 flex justify-between items-center z-40">
+    <button onclick="window.cambiarTab('dashboard')" class="flex flex-col items-center text-blue-600">
+      <i class="fa-solid fa-house text-xl"></i>
+      <span class="text-[10px] font-black mt-1 uppercase tracking-tighter">Inicio</span>
+    </button>
+    <button onclick="window.cambiarTab('reportes')" class="flex flex-col items-center text-gray-400">
+      <i class="fa-solid fa-chart-pie text-xl"></i>
+      <span class="text-[10px] font-black mt-1 uppercase tracking-tighter">Reportes</span>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </button>
+    <button onclick="window.cambiarTab('ajustes')" class="flex flex-col items-center text-gray-400">
+      <i class="fa-solid fa-gear text-xl"></i>
+      <span class="text-[10px] font-black mt-1 uppercase tracking-tighter">Ajustes</span>
+    </button>
+  </nav>
+
+  <div id="modal-registro" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end justify-center z-50">
+    <div class="bg-white w-full max-w-md rounded-t-[3rem] p-8 shadow-2xl animate-slide-up">
+      <div class="flex justify-between items-center mb-6">
+        <h3 id="modal-titulo" class="text-2xl font-black text-gray-800 tracking-tight">Registro</h3>
+        <button onclick="window.cerrarModal()" class="text-gray-300 text-3xl font-light">&times;</button>
+      </div>
+      <div class="space-y-5">
+        <div>
+          <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Monto ($)</label>
+          <input type="number" id="form-monto" class="w-full bg-gray-50 border-none rounded-2xl p-5 text-2xl font-black text-blue-600 focus:ring-2 focus:ring-blue-500" placeholder="0.00">
+        </div>
+        <div>
+          <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Categoría</label>
+          <select id="form-categoria" class="w-full bg-gray-50 border-none rounded-2xl p-5 font-bold text-gray-700 appearance-none">
+            </select>
+        </div>
+        <button onclick="window.guardarEnFirebase()" class="w-full bg-blue-600 text-white font-black py-5 rounded-[2rem] shadow-lg shadow-blue-200 active:scale-95 transition-all">
+          GUARDAR EN NUBE
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
